@@ -32,11 +32,6 @@ spec:
           env:
             - name: APP_ENV
               value: "production"
-          volumeMounts:
-            - name: simplebankapp-config
-              mountPath: /usr/share/nginx/html/config.json
-              subPath: api-key
-              readOnly: true
           livenessProbe:
             httpGet:
               path: /
@@ -49,7 +44,3 @@ spec:
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 10
-      volumes:
-        - name: simplebankapp-config
-          secret:
-            secretName: simplebankapp-secrets
