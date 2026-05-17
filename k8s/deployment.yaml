@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: simplebankapp-container
-          image: mokadir/simplebankapp:2
+          image: mokadir/mkadir-bankapp:2
           ports:
             - containerPort: 80
           resources:
