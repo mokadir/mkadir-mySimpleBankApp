@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - Mkadir Bank</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES ========== */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            --text-color: #e0e0e0;
+            --heading-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-glow: rgba(0, 0, 0, 0.3);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --input-text: #ffffff;
+            --input-placeholder: rgba(255, 255, 255, 0.3);
+            --label-color: rgba(255, 255, 255, 0.7);
+            --navbar-bg: rgba(15, 12, 41, 0.8);
+            --navbar-border: rgba(255, 255, 255, 0.05);
+            --nav-link-color: rgba(255, 255, 255, 0.7);
+            --footer-bg: rgba(15, 12, 41, 0.6);
+            --footer-border: rgba(255, 255, 255, 0.05);
+            --footer-text: rgba(255, 255, 255, 0.5);
+            --link-color: #667eea;
+            --link-hover: #764ba2;
+            --btn-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --btn-shadow: rgba(102, 126, 234, 0.3);
+            --btn-text: #ffffff;
+            --gradient-text: linear-gradient(135deg, #667eea, #764ba2);
+            --orb-1-bg: radial-gradient(circle, #667eea, #764ba2);
+            --orb-2-bg: radial-gradient(circle, #f093fb, #f5576c);
+            --orb-opacity: 0.3;
+            --toggle-icon-color: rgba(255, 255, 255, 0.6);
+            --alert-bg: rgba(245, 87, 108, 0.15);
+            --alert-border: rgba(245, 87, 108, 0.3);
+            --alert-text: #f5576c;
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 50%, #bbdefb 100%);
+            --text-color: #37474f;
+            --heading-color: #1a237e;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --card-glow: rgba(0, 0, 0, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.8);
+            --input-border: rgba(0, 0, 0, 0.12);
+            --input-text: #263238;
+            --input-placeholder: rgba(0, 0, 0, 0.25);
+            --label-color: rgba(0, 0, 0, 0.6);
+            --navbar-bg: rgba(255, 255, 255, 0.85);
+            --navbar-border: rgba(0, 0, 0, 0.06);
+            --nav-link-color: rgba(0, 0, 0, 0.6);
+            --footer-bg: rgba(255, 255, 255, 0.7);
+            --footer-border: rgba(0, 0, 0, 0.06);
+            --footer-text: rgba(0, 0, 0, 0.45);
+            --link-color: #3949ab;
+            --link-hover: #5c6bc0;
+            --btn-gradient: linear-gradient(135deg, #3949ab, #5c6bc0);
+            --btn-shadow: rgba(57, 73, 171, 0.3);
+            --btn-text: #ffffff;
+            --gradient-text: linear-gradient(135deg, #3949ab, #5c6bc0);
+            --orb-1-bg: radial-gradient(circle, #7986cb, #9fa8da);
+            --orb-2-bg: radial-gradient(circle, #f48fb1, #ce93d8);
+            --orb-opacity: 0.4;
+            --toggle-icon-color: #f9a825;
+            --alert-bg: rgba(229, 57, 53, 0.08);
+            --alert-border: rgba(229, 57, 53, 0.2);
+            --alert-text: #d32f2f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* Animated orbs */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: var(--orb-opacity);
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+            transition: opacity 0.4s ease;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: var(--orb-1-bg);
+            top: -150px; left: -150px;
+        }
+        body::after {
+            width: 400px; height: 400px;
+            background: var(--orb-2-bg);
+            bottom: -100px; right: -100px;
+            animation-delay: -4s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* ========== THEME TOGGLE ========== */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--toggle-icon-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-left: 12px;
+        }
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(20deg);
+        }
+        [data-theme="light"] .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .navbar-custom {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--navbar-border);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 12px 20px;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .navbar-custom a { color: var(--text-color) !important; text-decoration: none; }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .navbar-custom .social-icons a {
+            color: var(--toggle-icon-color);
+            margin-left: 15px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .navbar-custom .social-icons a:hover {
+            color: var(--link-color);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 420px;
+            width: 90%;
+            padding: 40px 35px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 25px 50px var(--card-glow);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
+            border-radius: 20px 20px 0 0;
+        }
+        .container h2 {
+            color: var(--heading-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            transition: color 0.4s ease;
+        }
+        .container h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--btn-gradient);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label {
+            color: var(--label-color);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.4s ease;
+        }
+        .form-group input {
+            width: 100%;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--input-text);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #667eea;
+            background: var(--input-bg);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+        .form-group input::placeholder { color: var(--input-placeholder); }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--btn-gradient);
+            border: none;
+            border-radius: 12px;
+            color: var(--btn-text);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--btn-shadow);
+        }
+        .btn:active { transform: translateY(0); }
+
+        .custom-link {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .custom-link:hover {
+            color: var(--link-hover);
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: var(--footer-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--footer-text);
+            padding: 15px 0;
+            font-size: 13px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            border-top: 1px solid var(--footer-border);
+            z-index: 1;
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+        .footer a { color: var(--link-color); }
+        .footer a:hover { color: var(--link-hover); }
+
+        .alert {
+            background: var(--alert-bg);
+            border: 1px solid var(--alert-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--alert-text);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        .mt-3 { margin-top: 20px; }
+        .text-center { text-align: center; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 576px) {
+            body { overflow: auto; padding: 20px 0; }
+            body::before, body::after {
+                filter: blur(60px);
+                opacity: calc(var(--orb-opacity) * 0.6);
+            }
+            body::before { width: 300px; height: 300px; top: -80px; left: -80px; }
+            body::after { width: 250px; height: 250px; bottom: -60px; right: -60px; }
+            .navbar-custom { padding: 10px 15px; }
+            .navbar-custom .navbar-brand { font-size: 1.1rem; }
+            .container {
+                width: 92%;
+                padding: 30px 20px;
+                border-radius: 16px;
+                margin-top: 60px;
+                margin-bottom: 70px;
+            }
+            .container h2 { font-size: 1.4rem; }
+            .form-group input { padding: 12px 14px; font-size: 0.9rem; }
+            .btn { padding: 12px; font-size: 0.9rem; }
+            .theme-toggle { font-size: 1.1rem; padding: 4px 8px; margin-left: 8px; }
+            .navbar-custom .social-icons a { font-size: 1rem; margin-left: 10px; }
+            .footer { font-size: 11px; padding: 10px 0; }
+            @keyframes float {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-15px) scale(1.03); }
+            }
+        }
+
+        @media (min-width: 577px) and (max-width: 768px) {
+            .container { width: 85%; padding: 35px 30px; }
+            .container h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <a class="navbar-brand" href="#">Mkadir Bank</a>
+    <div class="ml-auto d-flex align-items-center">
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </button>
+        <div class="social-icons">
+            <a href="https://www.youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="text-center">Login</h2>
+    <form method="post" action="/login">
+        <div class="form-group">
+            <label>Username:</label>
+            <input type="text" class="form-control" name="username" required />
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" class="form-control" name="password" required />
+        </div>
+        <button type="submit" class="btn btn-block">Login</button>
+    </form>
+    <p class="text-center mt-3">Don't have an account? <a href="/register" class="custom-link">Register here</a></p>
+
+    <div th:if="${param.error}" class="alert alert-danger mt-3 text-center">Invalid username or password.</div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2026 Code With Mkadir. All rights reserved. | <a href="#" class="custom-link">Privacy Policy</a> | <a href="#" class="custom-link">Terms of Service</a></p>
+</footer>
+
+<script>
+    (function() {
+        const html = document.documentElement;
+        const toggle = document.getElementById('themeToggle');
+        const icon = toggle.querySelector('i');
+
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('mkadir-theme', theme);
+            if (theme === 'light') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        // Load saved theme on page load
+        const saved = localStorage.getItem('mkadir-theme');
+        if (saved) {
+            setTheme(saved);
+        } else {
+            // Default to dark if no preference saved
+            setTheme('dark');
+        }
+
+        toggle.addEventListener('click', function() {
+            const current = html.getAttribute('data-theme');
+            setTheme(current === 'light' ? 'dark' : 'light');
+        });
+    })();
+</script>
+</body>
+</html>

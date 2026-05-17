@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ns-simplebankapp
+  name: simplebankapp-deployment
+  labels:
+    app: simplebankapp
+    environment: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplebankapp
+  template:
+    metadata:
+      labels:
+        app: simplebankapp
+        environment: production
+    spec:
+      containers:
+        - name: simplebankapp-container
+          image: mokadir/simplebankapp:1
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          env:
+            - name: APP_ENV
+              value: "production"
+          volumeMounts:
+            - name: simplebankapp-config
+              mountPath: /usr/share/nginx/html/config.json
+              subPath: api-key
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: simplebankapp-config
+          secret:
+            secretName: simplebankapp-secrets

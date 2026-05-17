@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transaction History - Mkadir Bank</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            --text-color: #e0e0e0;
+            --heading-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --card-glow: rgba(0, 0, 0, 0.2);
+            --navbar-bg: rgba(15, 12, 41, 0.85);
+            --navbar-border: rgba(255, 255, 255, 0.05);
+            --nav-link-color: rgba(255, 255, 255, 0.7);
+            --nav-link-hover-bg: rgba(102, 126, 234, 0.15);
+            --footer-bg: rgba(15, 12, 41, 0.6);
+            --footer-border: rgba(255, 255, 255, 0.05);
+            --footer-text: rgba(255, 255, 255, 0.5);
+            --link-color: #667eea;
+            --link-hover: #764ba2;
+            --gradient-text: linear-gradient(135deg, #667eea, #764ba2);
+            --orb-1-bg: radial-gradient(circle, #667eea, #764ba2);
+            --orb-2-bg: radial-gradient(circle, #f093fb, #f5576c);
+            --orb-opacity: 0.25;
+            --toggle-icon-color: rgba(255, 255, 255, 0.6);
+            --table-header-color: rgba(255, 255, 255, 0.7);
+            --table-header-border: rgba(102, 126, 234, 0.3);
+            --table-row-hover: rgba(102, 126, 234, 0.08);
+            --table-row-odd: rgba(255, 255, 255, 0.02);
+            --table-border: rgba(255, 255, 255, 0.06);
+            --text-success: #43e97b;
+            --text-danger: #f5576c;
+            --back-link-bg: rgba(255, 255, 255, 0.05);
+            --back-link-border: rgba(255, 255, 255, 0.1);
+            --back-link-hover-bg: rgba(102, 126, 234, 0.1);
+            --back-link-hover-border: #667eea;
+        }
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 50%, #bbdefb 100%);
+            --text-color: #37474f;
+            --heading-color: #1a237e;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --card-glow: rgba(0, 0, 0, 0.08);
+            --navbar-bg: rgba(255, 255, 255, 0.85);
+            --navbar-border: rgba(0, 0, 0, 0.06);
+            --nav-link-color: rgba(0, 0, 0, 0.6);
+            --nav-link-hover-bg: rgba(57, 73, 171, 0.08);
+            --footer-bg: rgba(255, 255, 255, 0.7);
+            --footer-border: rgba(0, 0, 0, 0.06);
+            --footer-text: rgba(0, 0, 0, 0.45);
+            --link-color: #3949ab;
+            --link-hover: #5c6bc0;
+            --gradient-text: linear-gradient(135deg, #3949ab, #5c6bc0);
+            --orb-1-bg: radial-gradient(circle, #7986cb, #9fa8da);
+            --orb-2-bg: radial-gradient(circle, #f48fb1, #ce93d8);
+            --orb-opacity: 0.4;
+            --toggle-icon-color: #f9a825;
+            --table-header-color: #1a237e;
+            --table-header-border: #3949ab;
+            --table-row-hover: rgba(57, 73, 171, 0.06);
+            --table-row-odd: rgba(0, 0, 0, 0.02);
+            --table-border: rgba(0, 0, 0, 0.08);
+            --text-success: #43a047;
+            --text-danger: #d32f2f;
+            --back-link-bg: rgba(255, 255, 255, 0.5);
+            --back-link-border: rgba(0, 0, 0, 0.12);
+            --back-link-hover-bg: rgba(57, 73, 171, 0.08);
+            --back-link-hover-border: #3949ab;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: var(--orb-opacity);
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+            transition: opacity 0.4s ease;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: var(--orb-1-bg);
+            top: -150px; left: -150px;
+        }
+        body::after {
+            width: 400px; height: 400px;
+            background: var(--orb-2-bg);
+            bottom: -100px; right: -100px;
+            animation-delay: -4s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+        .theme-toggle {
+            background: none; border: none;
+            color: var(--toggle-icon-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(20deg);
+        }
+        [data-theme="light"] .theme-toggle:hover { background: rgba(0, 0, 0, 0.06); }
+        .navbar-custom {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--navbar-border);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 12px 20px;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .navbar-custom a { color: var(--text-color) !important; text-decoration: none; }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .navbar-nav .nav-link {
+            color: var(--nav-link-color) !important;
+            transition: all 0.3s ease;
+            padding: 8px 16px !important;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        .navbar-nav .nav-link:hover {
+            color: var(--text-color) !important;
+            background: var(--nav-link-hover-bg);
+        }
+        .container {
+            max-width: 1100px;
+            width: 95%;
+            margin-top: 80px;
+            padding-bottom: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        h2 {
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            color: var(--heading-color);
+            transition: color 0.4s ease;
+        }
+        h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-text);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+        .table-custom {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 15px 35px var(--card-glow);
+            overflow-x: auto;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .table-striped { margin-bottom: 0; }
+        .table-striped tbody tr { transition: background 0.3s ease; }
+        .table-striped tbody tr:nth-of-type(odd) { background: var(--table-row-odd); }
+        .table-striped tbody tr:hover { background: var(--table-row-hover); }
+        .table-striped td, .table-striped th {
+            color: var(--text-color);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--table-border);
+            vertical-align: middle;
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+        .table-striped th {
+            color: var(--table-header-color);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--table-header-border);
+            background: transparent;
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+        .text-success { color: var(--text-success) !important; font-weight: 600; }
+        .text-danger { color: var(--text-danger) !important; font-weight: 600; }
+        .custom-link { color: var(--link-color); text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+        .custom-link:hover { color: var(--link-hover); text-decoration: underline; }
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 28px;
+            background: var(--back-link-bg);
+            border: 1px solid var(--back-link-border);
+            border-radius: 12px;
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: var(--back-link-hover-bg);
+            border-color: var(--back-link-hover-border);
+            color: var(--link-color);
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 576px) {
+            body { overflow: auto; height: auto; padding: 20px 0; }
+            body::before, body::after { filter: blur(60px); opacity: calc(var(--orb-opacity) * 0.6); }
+            body::before { width: 300px; height: 300px; top: -80px; left: -80px; }
+            body::after { width: 250px; height: 250px; bottom: -60px; right: -60px; }
+            .navbar-custom { padding: 10px 15px; }
+            .navbar-custom .navbar-brand { font-size: 1.1rem; }
+            .container { width: 98%; margin-top: 70px; padding-bottom: 30px; }
+            h2 { font-size: 1.4rem; }
+            .table-custom { padding: 15px 10px; border-radius: 16px; }
+            .table-striped td, .table-striped th { padding: 10px 12px; font-size: 0.8rem; }
+            .table-striped th { font-size: 0.7rem; }
+            .back-link { padding: 10px 20px; font-size: 0.85rem; }
+            .theme-toggle { font-size: 1.1rem; padding: 4px 8px; }
+            @keyframes float {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-15px) scale(1.03); }
+            }
+        }
+
+        @media (min-width: 577px) and (max-width: 768px) {
+            .container { width: 98%; }
+            h2 { font-size: 1.5rem; }
+            .table-striped td, .table-striped th { padding: 12px 16px; font-size: 0.85rem; }
+        }
+
+        /* Responsive table: horizontal scroll on very small screens */
+        @media (max-width: 400px) {
+            .table-custom { padding: 10px 5px; }
+            .table-striped td, .table-striped th { padding: 8px 8px; font-size: 0.75rem; }
+            .table-striped th { font-size: 0.65rem; }
+            .table-responsive { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <a class="navbar-brand" href="#">Mkadir Bank</a>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="/transactions">Transactions</a></li>
+        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        <li class="nav-item"><button class="theme-toggle nav-link" id="themeToggle" title="Toggle theme"><i class="fas fa-moon"></i></button></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <h2 class="text-center">Transaction History</h2>
+    <div class="table-responsive table-custom">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.id}"></td>
+                <td th:text="${transaction.type}"></td>
+                <td th:text="${transaction.amount}"
+                    th:classappend="${transaction.type.contains('Transfer In') || transaction.type == 'Deposit'} ? 'text-success' : 'text-danger'">
+                </td>
+                <td th:text="${transaction.timestamp}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="text-center"><a href="/dashboard" class="back-link">Back to Dashboard</a></p>
+</div>
+
+<script>
+    (function() {
+        const html = document.documentElement;
+        const toggle = document.getElementById('themeToggle');
+        const icon = toggle.querySelector('i');
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('mkadir-theme', theme);
+            icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        const saved = localStorage.getItem('mkadir-theme');
+        setTheme(saved || 'dark');
+        toggle.addEventListener('click', function() {
+            setTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        });
+    })();
+</script>
+</body>
+</html>

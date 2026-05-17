@@ -1,0 +1,30 @@
+# Compiled Java classes
+target/
+*.class
+
+# Maven
+*.war
+*.jar
+*.zip
+*.tar.gz
+*.rar
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Maven wrapper
+mvnw
+mvnw.cmd
+.mvn/
