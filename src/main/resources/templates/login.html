@@ -221,8 +221,10 @@
         .form-group input {
             width: 100%;
             border: 1px solid var(--input-border);
-            background: var(--input-bg);
-            color: var(--input-text);
+            background: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            -webkit-text-fill-color: var(--input-text) !important;
+            caret-color: var(--input-text) !important;
             padding: 14px 16px;
             border-radius: 12px;
             font-size: 0.95rem;
@@ -231,10 +233,26 @@
         }
         .form-group input:focus {
             border-color: #667eea;
-            background: var(--input-bg);
+            background: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            -webkit-text-fill-color: var(--input-text) !important;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
         }
-        .form-group input::placeholder { color: var(--input-placeholder); }
+        /* Fix browser autofill styling */
+        .form-group input:-webkit-autofill,
+        .form-group input:-webkit-autofill:hover,
+        .form-group input:-webkit-autofill:focus,
+        .form-group input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px var(--card-bg) inset !important;
+            -webkit-text-fill-color: var(--input-text) !important;
+            caret-color: var(--input-text) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+        .form-group input::placeholder {
+            color: var(--input-placeholder) !important;
+            -webkit-text-fill-color: var(--input-placeholder) !important;
+            opacity: 1;
+        }
 
         .btn {
             width: 100%;
@@ -339,10 +357,7 @@
         <button class="theme-toggle" id="themeToggle" title="Toggle theme">
             <i class="fas fa-moon"></i>
         </button>
-        <div class="social-icons">
-            <a href="https://www.youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        </div>
+        
     </div>
 </nav>
 
